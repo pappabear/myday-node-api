@@ -32,6 +32,22 @@ function getAllTasks(req, res, next) {
       });
   }
 
+function getTasksByDate(req, res, next) {
+	var dt = req.query.dt;	
+  	db.any("select * from tasks where due_date='" + dt + "'")
+    	.then(function (data) {
+      	  res.status(200)
+        	.json({
+	          status: 'success',
+	          data: data,
+	          message: 'Retrieved ALL tasks for date ' + dt
+	        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 function getSingleTask(req, res, next) {
 var taskID = parseInt(req.params.id);
 db.one('select * from tasks where id = $1', taskID)
@@ -100,6 +116,7 @@ function createTask(req, res, next) {
   
 module.exports = {
   getAllTasks: getAllTasks,
+  getTasksByDate: getTasksByDate,
   getSingleTask: getSingleTask,
   createTask: createTask,
   updateTask: updateTask,
