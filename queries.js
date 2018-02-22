@@ -32,15 +32,31 @@ function getAllTasks(req, res, next) {
       });
   }
 
-function getTasksByDate(req, res, next) {
-	var dt = req.query.dt;	
-  	db.any("select * from tasks where due_date='" + dt + "'")
+function getTasksDueToday(req, res, next) {
+	//var dt = req.query.dt;	
+  	db.any("select * from tasks where due_date=CURRENT_DATE")
     	.then(function (data) {
       	  res.status(200)
         	.json({
 	          status: 'success',
 	          data: data,
-	          message: 'Retrieved ALL tasks for date ' + dt
+	          message: 'Retrieved tasks for date 2018-02-02'
+	        });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getTasksDueTomorrow(req, res, next) {
+	//var dt = req.query.dt;	
+  	db.any("select * from tasks where due_date=CURRENT_DATE + INTERVAL '1 day'")
+    	.then(function (data) {
+      	  res.status(200)
+        	.json({
+	          status: 'success',
+	          data: data,
+	          message: 'Retrieved tasks for date 2018-02-03'
 	        });
     })
     .catch(function (err) {
@@ -116,7 +132,8 @@ function createTask(req, res, next) {
   
 module.exports = {
   getAllTasks: getAllTasks,
-  getTasksByDate: getTasksByDate,
+  getTasksDueToday: getTasksDueToday,
+  getTasksDueTomorrow: getTasksDueTomorrow,
   getSingleTask: getSingleTask,
   createTask: createTask,
   updateTask: updateTask,
