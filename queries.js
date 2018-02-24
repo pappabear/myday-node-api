@@ -32,6 +32,22 @@ function getAllTasks(req, res, next) {
       });
   }
 
+function getTasksForWeek(req, res, next) {
+	//var dt = req.query.dt;	
+	db.any("select * from tasks where due_date between CURRENT_DATE and CURRENT_DATE + INTERVAL '5 days' order by due_date")
+  	.then(function (data) {
+    	  res.status(200)
+      	.json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved tasks for week'
+        });
+    })
+    .catch(function (err) {
+        return next(err);
+      });
+  }
+
 function getTasksDueToday(req, res, next) {
 	//var dt = req.query.dt;	
   	db.any("select * from tasks where due_date=CURRENT_DATE")
@@ -134,6 +150,7 @@ module.exports = {
   getAllTasks: getAllTasks,
   getTasksDueToday: getTasksDueToday,
   getTasksDueTomorrow: getTasksDueTomorrow,
+  getTasksForWeek: getTasksForWeek,
   getSingleTask: getSingleTask,
   createTask: createTask,
   updateTask: updateTask,
