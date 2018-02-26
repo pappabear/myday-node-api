@@ -113,7 +113,39 @@ function createTask(req, res, next) {
       });
   }
 
-  function updateTask(req, res, next) {
+function toggleStatus(req, res, next) {
+	var taskID = parseInt(req.params.id);
+	var oldStatus = false;
+	var newStatus = false;
+	db.one('select * from tasks where id = $1', taskID)
+	    .then(function (data) {
+	    res.status(200)
+	        oldStatus = data.is_complete;
+			//console.log("data.is_complete=" + data.is_complete);
+			if (oldStatus === true)
+				newStatus = false;
+			else
+				newStatus = true;
+
+			//console.log("newStatus=" + newStatus);
+			db.none('update tasks set is_complete=$1 where id=$2', [newStatus, parseInt(req.params.id)])
+		        .then(function () {
+		          res.status(200)
+		            .json({
+		              status: 'success',
+		              message: 'Toggled task status'
+		            });
+		        })
+		        .catch(function (err) {
+		          return next(err);
+		        });
+	    })
+	    .catch(function (err) {
+	    return next(err);
+	    });
+    }
+
+function updateTask(req, res, next) {
     db.none('update tasks set subject=$1, is_complete=$2, due_date=$3 where id=$4',
       [req.body.subject, req.body.is_complete, req.body.due_date, parseInt(req.params.id)])
       .then(function () {
@@ -128,7 +160,7 @@ function createTask(req, res, next) {
       });
   }
   
-  function removeTask(req, res, next) {
+function removeTask(req, res, next) {
     var taskID = parseInt(req.params.id);
     db.result('delete from tasks where id = $1', taskID)
       .then(function (result) {
@@ -154,5 +186,6 @@ module.exports = {
   getSingleTask: getSingleTask,
   createTask: createTask,
   updateTask: updateTask,
+  toggleStatus: toggleStatus,
   removeTask: removeTask
 };

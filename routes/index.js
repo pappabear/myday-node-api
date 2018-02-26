@@ -11,6 +11,7 @@ router.get('/api/week', db.getTasksForWeek);
 router.get('/api/tasks/:id', db.getSingleTask);
 router.post('/api/tasks', db.createTask);
 router.put('/api/tasks/:id', db.updateTask);
+router.put('/api/toggleStatus/:id', db.toggleStatus);
 router.delete('/api/tasks/:id', db.removeTask);
 
 
