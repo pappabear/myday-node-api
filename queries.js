@@ -34,7 +34,7 @@ function getAllTasks(req, res, next) {
 
 function getTasksForWeek(req, res, next) {
 	//var dt = req.query.dt;	
-	db.any("select * from tasks where due_date between CURRENT_DATE and CURRENT_DATE + INTERVAL '5 days' order by due_date")
+	db.any("select * from tasks where due_date between CURRENT_DATE and CURRENT_DATE + INTERVAL '5 days' order by due_date, is_complete, id")
   	.then(function (data) {
     	  res.status(200)
       	.json({
@@ -50,7 +50,7 @@ function getTasksForWeek(req, res, next) {
 
 function getTasksDueToday(req, res, next) {
 	//var dt = req.query.dt;	
-  	db.any("select * from tasks where due_date=CURRENT_DATE")
+  	db.any("select * from tasks where due_date=CURRENT_DATE or (due_date < CURRENT_DATE and is_complete = false) order by is_complete, id")
     	.then(function (data) {
       	  res.status(200)
         	.json({
@@ -66,7 +66,7 @@ function getTasksDueToday(req, res, next) {
 
 function getTasksDueTomorrow(req, res, next) {
 	//var dt = req.query.dt;	
-  	db.any("select * from tasks where due_date=CURRENT_DATE + INTERVAL '1 day'")
+  	db.any("select * from tasks where due_date=CURRENT_DATE + INTERVAL '1 day' order by is_complete, id")
     	.then(function (data) {
       	  res.status(200)
         	.json({

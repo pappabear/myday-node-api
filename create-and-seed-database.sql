@@ -14,4 +14,4 @@ INSERT INTO tasks (subject, is_complete, due_date) VALUES ('due today', false, C
 INSERT INTO tasks (subject, is_complete, due_date) VALUES ('due tomorrow', false, CURRENT_DATE + INTERVAL '1 day');
 INSERT INTO tasks (subject, is_complete, due_date) VALUES ('due yesterday and late', false, CURRENT_DATE - INTERVAL '1 day');
 INSERT INTO tasks (subject, is_complete, due_date) VALUES ('completed today', true, CURRENT_DATE);
-INSERT INTO tasks (subject, is_complete, due_date) VALUES ('completed yesterday', false, CURRENT_DATE - INTERVAL '1 day');
+INSERT INTO tasks (subject, is_complete, due_date) VALUES ('completed yesterday', true, CURRENT_DATE - INTERVAL '1 day');
