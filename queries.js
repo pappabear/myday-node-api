@@ -88,7 +88,7 @@ db.one('select * from tasks where id = $1', taskID)
         .json({
         status: 'success',
         data: data,
-        message: 'Retrieved ONE task'
+        message: 'Retrieved ONE task with id=' + taskID
         });
     })
     .catch(function (err) {
@@ -146,13 +146,13 @@ function toggleStatus(req, res, next) {
     }
 
 function updateTask(req, res, next) {
-    db.none('update tasks set subject=$1, is_complete=$2, due_date=$3 where id=$4',
-      [req.body.subject, req.body.is_complete, req.body.due_date, parseInt(req.params.id)])
+    db.none('update tasks set subject=$1, due_date=$2 where id=$3',
+      [req.body.subject, req.body.due_date, parseInt(req.params.id)])
       .then(function () {
         res.status(200)
           .json({
             status: 'success',
-            message: 'Updated task'
+            message: 'Updated task with id=' + req.params.id
           });
       })
       .catch(function (err) {
